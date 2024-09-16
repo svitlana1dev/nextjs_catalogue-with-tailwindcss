@@ -7,6 +7,7 @@ import CustomButton from "./CustomButton";
 import CarDetails from "./CarDetails";
 import { CarProps } from "@/types";
 import { calculateCarRent } from "@/utils";
+import CardIcon from "./CardIcon";
 
 interface CarCardProps {
   car: CarProps;
@@ -18,6 +19,8 @@ const CarCard = ({ car }: CarCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const carRent = calculateCarRent(city_mpg, year);
+
+  const handleIsOpen = () => setIsOpen((currentState) => !currentState);
 
   return (
     <div className="car-card group">
@@ -49,25 +52,13 @@ const CarCard = ({ car }: CarCardProps) => {
 
       <div className="relative flex w-full mt-2">
         <div className="flex group-hover:invisible w-full justify-between text-grey">
-          <div className="flex flex-col justify-center items-center gap-2">
-            <Image
-              src="/steering-wheel.svg"
-              width={20}
-              height={20}
-              alt="steering wheel"
-            />
-            <p className="text-[14px] leading-[17px]">
-              {transmission === "a" ? "Automatic" : "Manual"}
-            </p>
-          </div>
-          <div className="car-card__icon">
-            <Image src="/tire.svg" width={20} height={20} alt="seat" />
-            <p className="car-card__icon-text">{drive.toUpperCase()}</p>
-          </div>
-          <div className="car-card__icon">
-            <Image src="/gas.svg" width={20} height={20} alt="seat" />
-            <p className="car-card__icon-text">{city_mpg} MPG</p>
-          </div>
+          <CardIcon
+            src="/steering-wheel.svg"
+            alt="steering wheel"
+            title={transmission === "a" ? "Automatic" : "Manual"}
+          />
+          <CardIcon src="/tire.svg" alt="seat" title={drive.toUpperCase()} />
+          <CardIcon src="/gas.svg" alt="seat" title={`${city_mpg} MPG`} />
         </div>
 
         <div className="car-card__btn-container">
@@ -76,16 +67,12 @@ const CarCard = ({ car }: CarCardProps) => {
             containerStyles="w-full py-[16px] rounded-full bg-primary-blue"
             textStyles="text-white text-[14px] leading-[17px] font-bold"
             rightIcon="/right-arrow.svg"
-            handleClick={() => setIsOpen(true)}
+            handleClick={handleIsOpen}
           />
         </div>
       </div>
 
-      <CarDetails
-        isOpen={isOpen}
-        closeModal={() => setIsOpen(false)}
-        car={car}
-      />
+      <CarDetails isOpen={isOpen} closeModal={handleIsOpen} car={car} />
     </div>
   );
 };
