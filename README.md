@@ -2,11 +2,6 @@ Next.js application with TypeScript and Tailwind CSS [VIEW DEMO](https://nextjs-
 
 #### Getting Started
 
-1. Create .env file. Get api key from [Rapid API](https://rapidapi.com/apininjas/api/cars-by-api-ninjas/pricing)
-
-```
-NEXT_PUBLIC_RAPID_API_KEY= api key
-```
-
+1. Get api key from [Rapid API](https://rapidapi.com/apininjas/api/cars-by-api-ninjas/pricing)
 2. Run `npm install`
 3. Run `npm run dev`

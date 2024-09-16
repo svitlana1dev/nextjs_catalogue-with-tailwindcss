@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Fragment, useState } from "react";
+import { ChangeEvent, Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { SearchManuFacturerProps } from "@/types";
 import { manufacturers } from "@/constants";
@@ -8,6 +8,7 @@ const SearchManufacturer = ({
   manufacturer,
   setManuFacturer,
 }: SearchManuFacturerProps) => {
+  const [isActive, setIsActive] = useState(false);
   const [query, setQuery] = useState("");
 
   const filteredManufacturers =
@@ -20,24 +21,37 @@ const SearchManufacturer = ({
             .includes(query.toLowerCase().replace(/\s+/g, ""))
         );
 
+  const handleClick = () => {
+    setIsActive(!isActive);
+  };
+
+  const handleOnChange = (arg: ChangeEvent<HTMLInputElement> | null = null) => {
+    if (!arg) {
+      setQuery("");
+      return;
+    }
+
+    const { value } = arg.target;
+    setQuery(value);
+  };
+
   return (
     <div className="search-manufacturer">
       <Combobox value={manufacturer} onChange={setManuFacturer}>
         <div className="relative w-full">
-          <Combobox.Button className="absolute top-[14px]">
-            <Image
-              src="/car-logo.svg"
-              width={20}
-              height={20}
-              className="ml-4"
-              alt="car logo"
-            />
+          <Combobox.Button
+            onClick={handleClick}
+            className={`absolute h-full ml-4 transition-transform duration-300 ${
+              isActive ? "rotate-180" : "rotate-0"
+            }`}
+          >
+            <Image src="/arrow-down.svg" width={20} height={20} alt="arrow" />
           </Combobox.Button>
 
           <Combobox.Input
             className="search-manufacturer__input"
             displayValue={(item: string) => item}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={handleOnChange}
             placeholder="Volkswagen..."
           />
 
@@ -46,10 +60,10 @@ const SearchManufacturer = ({
             leave="transition ease-in duration-100"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
-            afterLeave={() => setQuery("")}
+            afterLeave={handleOnChange}
           >
             <Combobox.Options
-              className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+              className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-50"
               static
             >
               {filteredManufacturers.length === 0 && query !== "" ? (
@@ -80,7 +94,7 @@ const SearchManufacturer = ({
                           {item}
                         </span>
 
-                        {selected ? (
+                        {selected && (
                           <span
                             className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
                               active
@@ -88,7 +102,7 @@ const SearchManufacturer = ({
                                 : "text-pribg-primary-purple"
                             }`}
                           ></span>
-                        ) : null}
+                        )}
                       </>
                     )}
                   </Combobox.Option>

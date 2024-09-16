@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import SearchManufacturer from "./SearchManufacturer";
 
@@ -23,6 +23,8 @@ const SearchBar = () => {
   const [model, setModel] = useState("");
 
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,25 +37,27 @@ const SearchBar = () => {
   };
 
   const updateSearchParams = (model: string, manufacturer: string) => {
-    const searchParams = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(searchParams.toString());
 
     if (model) {
-      searchParams.set("model", model);
+      params.set("model", model);
     } else {
-      searchParams.delete("model");
+      params.delete("model");
     }
 
     if (manufacturer) {
-      searchParams.set("manufacturer", manufacturer);
+      params.set("manufacturer", manufacturer);
     } else {
-      searchParams.delete("manufacturer");
+      params.delete("manufacturer");
     }
 
-    const newPathname = `${
-      window.location.pathname
-    }?${searchParams.toString()}`;
+    const newPathname = `${pathname}?${params.toString()}`;
+    router.push(newPathname, { scroll: false });
+  };
 
-    router.push(newPathname);
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setModel(value);
   };
 
   return (
@@ -77,7 +81,7 @@ const SearchBar = () => {
           type="text"
           name="model"
           value={model}
-          onChange={(e) => setModel(e.target.value)}
+          onChange={handleOnChange}
           placeholder="Tiguan..."
           className="searchbar__input"
         />
