@@ -6,6 +6,6 @@ The Car Catalogue is a Next.js application with TypeScript for robust type-check
 
 #### Getting Started
 
-1. Get api key from [Rapid API](https://rapidapi.com/apininjas/api/cars-by-api-ninjas/pricing)
+1. Get api key from [Rapid API](https://nextjs-catalogue-with-tailwindcss-6ic0ap172.vercel.app/)
 2. Run `npm install`
 3. Run `npm run dev`
